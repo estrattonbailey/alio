@@ -100,9 +100,8 @@ module.exports = function createConfig (conf, watch) {
   conf.presets.map(p => {
     try {
       const preset = require(path.join(cwd, './node_modules', `@alio/preset-${p}`))
-      wc = preset(wc, { watch })
+      preset()(wc, { watch })
     } catch (e) {
-      console.log(e)
       log.hydrate({
         configError: [
           `cannot find '${p}' preset, please make sure it's installed`
@@ -110,9 +109,6 @@ module.exports = function createConfig (conf, watch) {
       })()
     }
   })
-
-  console.log(wc)
-  exit()
 
   return [
     conf,
