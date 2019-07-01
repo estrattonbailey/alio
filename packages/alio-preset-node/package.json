@@ -1,6 +1,6 @@
 {
   "name": "@alio/preset-node",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Node preset for alio.",
   "main": "index.js",
   "repository": {
@@ -12,6 +12,5 @@
   "bugs": {
     "url": "https://github.com/the-couch/alio/issues"
   },
-  "homepage": "https://github.com/the-couch/alio#readme",
-  "dependencies": {}
+  "homepage": "https://github.com/the-couch/alio#readme"
 }
