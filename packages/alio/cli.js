@@ -8,7 +8,6 @@ const exit = require('exit')
 const cwd = process.cwd()
 const pkg = require('./package.json')
 const alio = require('./index.js')
-const log = require('./lib/logger.js')
 const mergeConfig = require('./lib/mergeConfig.js')
 
 const prog = require('commander')
@@ -20,14 +19,14 @@ const prog = require('commander')
 prog
   .command('watch [inputs...]')
   .action(inputs => {
-    const compiler = alio(mergeConfig(inputs, prog))
+    const compiler = alio(mergeConfig(inputs, prog), { silent: false })
     compiler.watch()
   })
 
 prog
   .command('build [inputs...]')
   .action(inputs => {
-    const compiler = alio(mergeConfig(inputs, prog))
+    const compiler = alio(mergeConfig(inputs, prog), { silent: false })
     compiler.build()
   })
 
@@ -38,6 +37,5 @@ if (!process.argv.slice(2).length) {
   })
 } else {
   console.clear()
-  log.hydrate({ silent: false })
   prog.parse(process.argv)
 }

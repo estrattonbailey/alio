@@ -7,7 +7,7 @@ const cwd = process.cwd()
 const pkg = require('../package.json')
 
 evx.on('*', ({
-  silent = true,
+  silent = false,
   watch,
   done,
   closing,

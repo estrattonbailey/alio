@@ -123,10 +123,10 @@ function build (confs) {
   })
 }
 
-module.exports = (confs, options = {}) => {
+module.exports = (confs, options = { silent: true }) => {
   confs = [].concat(confs)
 
-  log.hydrate({ silent: options.silent !== false })
+  log.hydrate({ silent: options.silent })
 
   return {
     ...log,
