@@ -1,5 +1,6 @@
 const path = require('path')
 const clone = require('clone')
+const exit = require('exit')
 const webpack = require('webpack')
 const match = require('matched')
 
@@ -99,7 +100,7 @@ module.exports = function createConfig (conf, watch) {
   conf.presets.map(p => {
     try {
       const preset = require(path.join(cwd, './node_modules', `@alio/preset-${p}`))
-      preset(wc, { watch })
+      wc = preset(wc, { watch })
     } catch (e) {
       console.log(e)
       log.hydrate({
@@ -109,6 +110,9 @@ module.exports = function createConfig (conf, watch) {
       })()
     }
   })
+
+  console.log(wc)
+  exit()
 
   return [
     conf,
