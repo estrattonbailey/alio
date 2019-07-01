@@ -1,0 +1,39 @@
+{
+  "name": "alio",
+  "version": "0.0.1",
+  "description": "A compiler util.",
+  "main": "index.js",
+  "bin": {
+    "alio": "./cli.js"
+  },
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/the-couch/alio.git"
+  },
+  "author": "estrattonbailey",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/the-couch/alio/issues"
+  },
+  "homepage": "https://github.com/the-couch/alio#readme",
+  "dependencies": {
+    "@babel/core": "^7.3.4",
+    "@babel/plugin-proposal-object-rest-spread": "^7.3.4",
+    "acorn": "^6.1.1",
+    "ansi-colors": "^3.2.4",
+    "babel-loader": "^8.0.5",
+    "clone": "^2.1.2",
+    "commander": "^2.19.0",
+    "deepmerge": "^3.2.0",
+    "evx": "^1.0.1",
+    "exit": "^0.1.2",
+    "exit-hook": "^2.0.0",
+    "fs-extra": "^7.0.1",
+    "get-port": "^4.2.0",
+    "log-update": "^2.3.0",
+    "matched": "^3.0.1",
+    "socket.io": "^2.2.0",
+    "webpack": "^4.29.6"
+  }
+}

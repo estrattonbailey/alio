@@ -1,0 +1,15 @@
+{
+  "name": "alio-test",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "ava"
+  },
+  "dependencies": {
+    "@alio/preset-node": "^0.0.1",
+    "@alio/preset-postcss": "^0.0.1",
+    "@alio/preset-sass": "^0.0.1",
+    "alio": "^0.0.1",
+    "ava": "^2.1.0"
+  }
+}
