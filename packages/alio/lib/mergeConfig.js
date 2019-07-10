@@ -11,7 +11,13 @@ module.exports = function mergeConfig (inputs, prog) {
 
   try {
     config = require(path.join(cwd, prog.config || 'alio.config.js'))
-  } catch (e) {}
+  } catch (e) {
+    log.hydrate({
+      error: [ e.message || e ]
+    })()
+
+    exit()
+  }
 
   const cli = inputs.length ? {
     in: inputs.reduce((entry, file) => {
