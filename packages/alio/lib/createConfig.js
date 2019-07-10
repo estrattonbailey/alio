@@ -88,7 +88,7 @@ module.exports = function createConfig (conf, watch) {
 
   wc.resolve.alias = Object.assign(wc.resolve.alias, conf.alias || {})
   wc.plugins = wc.plugins.concat([
-    new webpack.DefinePlugin(JSON.stringify(conf.env || {})),
+    new webpack.DefinePlugin(conf.env || {}),
     conf.banner && new webpack.BannerPlugin({
       banner: conf.banner,
       raw: true,
