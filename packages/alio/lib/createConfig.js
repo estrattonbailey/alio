@@ -3,6 +3,7 @@ const clone = require('clone')
 const exit = require('exit')
 const webpack = require('webpack')
 const match = require('matched')
+const TerserPlugin = require('terser-webpack-plugin')
 
 const log = require('./logger.js')
 
@@ -109,6 +110,18 @@ module.exports = function createConfig (conf, watch) {
       })()
     }
   })
+
+  if (!watch) {
+    wc.optimization = {
+      minimizer: [
+        new TerserPlugin({
+          terserOptions: {
+            mangle: false
+          }
+        })
+      ]
+    }
+  }
 
   return [
     conf,
