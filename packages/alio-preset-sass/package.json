@@ -1,6 +1,6 @@
 {
   "name": "@alio/preset-sass",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "S(C)SS preset for alio.",
   "main": "index.js",
   "repository": {
