@@ -19,14 +19,18 @@ const prog = require('commander')
 prog
   .command('watch [inputs...]')
   .action(inputs => {
-    const compiler = alio(mergeConfig(inputs, prog), { silent: false })
+    let config = {}
+    try { config = require(path.join(cwd, prog.config || 'alio.config.js')) } catch (e) {}
+    const compiler = alio(mergeConfig(inputs, prog, config), { silent: false })
     compiler.watch()
   })
 
 prog
   .command('build [inputs...]')
   .action(inputs => {
-    const compiler = alio(mergeConfig(inputs, prog), { silent: false })
+    let config = {}
+    try { config = require(path.join(cwd, prog.config || 'alio.config.js')) } catch (e) {}
+    const compiler = alio(mergeConfig(inputs, prog, config), { silent: false })
     compiler.build()
   })
 

@@ -6,54 +6,66 @@ const log = require('./logger.js')
 
 const cwd = process.cwd()
 
-module.exports = function mergeConfig (inputs, prog) {
-  let config = {}
-
-  try {
-    config = require(path.join(cwd, prog.config || 'alio.config.js'))
-  } catch (e) {
-    log.hydrate({
-      error: [ e.message || e ]
-    })()
-
-    exit()
+function getFiles (file) {
+  if (/\*+/g.test(file)) {
+    return match.sync(path.join(cwd, file))
+  } else {
+    return [ path.join(cwd, file) ]
   }
+}
 
-  const cli = inputs.length ? {
-    in: inputs.reduce((entry, file) => {
-      if (/\*+/g.test(file)) {
-        const files = match.sync(path.join(cwd, file))
+module.exports = function mergeConfig (inputs, prog, config) {
+  let merged = []
 
-        files.map(file => {
-          entry[path.basename(file, '.js')] = file
-        })
+  if (config) {
+    const configs = [].concat(config)
+
+    merged = configs.map(config => {
+      const input = {}
+
+      if (typeof config.in === 'object' && !Array.isArray(config.in)) {
+        for (let name in config.in) {
+          input[name] = path.join(cwd, config.in[name])
+        }
       } else {
-        entry[path.basename(file, '.js')] = file
+        const files = getFiles(config.in)
+
+        files.map(f => {
+          input[path.basename(f, '.js')] = f
+        })
       }
 
-      return entry
-    }, {}),
-    out: prog.out || cwd,
-    reload: prog.reload || false,
-    presets: []
-  } : {}
+      return {
+        ...config,
+        in: input,
+      }
+    })
+  } else {
+    const input = inputs.reduce((entry, file) => {
+      const files = getFiles(file)
 
-  const conf = Object.assign(cli, config)
+      files.map(f => {
+        entry[path.basename(f, '.js')] = f
+      })
+
+      return entry
+    }, {})
+
+    merged = [
+      {
+        in: input,
+        out: prog.out || cwd,
+        reload: prog.reload || false,
+        presets: []
+      }
+    ]
+  }
 
   /**
    * assertions
    *
    * TODO ensure at least one entry
    */
-  if (!conf.in || (typeof conf.in === 'object' && !Object.keys(conf.in).length)) {
-    log.hydrate({
-      error: [
-        `config must contain at least one entry`
-      ]
-    })()
 
-    exit()
-  }
-
-  return conf
+  return merged
 }

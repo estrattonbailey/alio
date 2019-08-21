@@ -6,7 +6,9 @@
   "bin": {
     "alio": "./cli.js"
   },
-  "scripts": {},
+  "scripts": {
+    "test": "ava ./tests/*.test.js --verbose"
+  },
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/the-couch/alio.git"
@@ -35,5 +37,9 @@
     "matched": "^3.0.1",
     "socket.io": "^2.2.0",
     "webpack": "^4.29.6"
+  },
+  "devDependencies": {
+    "ava": "^2.3.0",
+    "proxyquire": "^2.1.3"
   }
 }
