@@ -8,7 +8,7 @@ const exit = require('exit')
 const cwd = process.cwd()
 const pkg = require('./package.json')
 const alio = require('./index.js')
-const mergeConfig = require('./lib/mergeConfig.js')
+const mergeCli = require('./lib/mergeCli.js')
 
 const { NODE_ENV } = process.env
 
@@ -23,7 +23,7 @@ prog
   .action(inputs => {
     let config = {}
     try { config = require(path.join(cwd, prog.config || 'alio.config.js')) } catch (e) {}
-    const compiler = alio(mergeConfig(inputs, prog, config), { silent: false })
+    const compiler = alio(mergeCli(inputs, prog, config), { silent: false })
     compiler.watch()
   })
 
@@ -32,7 +32,7 @@ prog
   .action(inputs => {
     let config = {}
     try { config = require(path.join(cwd, prog.config || 'alio.config.js')) } catch (e) {}
-    const compiler = alio(mergeConfig(inputs, prog, config), { silent: false })
+    const compiler = alio(mergeCli(inputs, prog, config), { silent: false })
     compiler.build()
   })
 

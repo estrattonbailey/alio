@@ -19,7 +19,7 @@ test('watch works', t => {
   t.plan(6)
 
   const prog = createProg({
-    './lib/mergeConfig.js': (inputs, prog, config) => {
+    './lib/mergeCli.js': (inputs, prog, config) => {
       t.is(inputs[0], 'index.js')
       t.truthy(prog)
       t.is(config.in, './foo.js')

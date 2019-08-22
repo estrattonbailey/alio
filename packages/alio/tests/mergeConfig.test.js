@@ -1,89 +1,41 @@
 const path = require('path')
 const test = require('ava')
-const proxy = require('proxyquire')
+const proxy = require('proxyquire').noPreserveCache()
 const cwd = process.cwd()
 
-let config
-let prog = {
-  out: '/dist',
+function create (stubs = {}) {
+  return proxy('../lib/mergeConfig.js', {
+    ...stubs
+  })
 }
 
-const mergeConfig = proxy('../lib/mergeConfig.js', {
-  './logger.js': {
-    hydrate: () => () => {},
-  },
+test('default config', t => {
+  const mergeConfig = create()
+
+  const [ conf, wc ] = mergeConfig({
+    in: './test/mock/foo.js',
+    out: './dist'
+  }, false)
+
+  t.is(wc.entry.foo, path.join(cwd, './test/mock/foo.js'))
+  t.is(wc.output.path, path.join(cwd, './dist'))
+  t.is(wc.mode, 'production')
+  t.is(wc.resolve.alias['@'], cwd)
+  t.truthy(wc.optimization)
+
+  t.pass()
 })
 
-test('merges cli entrypoints', t => {
-  const merged = mergeConfig([
-    './tests/mock/foo.js'
-  ], prog, config)
+test('default watch config', t => {
+  const mergeConfig = create()
 
-  const c = merged[0]
+  const [ conf, wc ] = mergeConfig({
+    in: './test/mock/foo.js',
+    out: './dist'
+  }, true)
 
-  t.is(c.in.foo, path.join(cwd, './tests/mock/foo.js'))
-})
+  t.is(wc.mode, 'development')
+  t.falsy(wc.optimization)
 
-test('merges globbed cli entrypoint', t => {
-  const merged = mergeConfig([
-    './tests/mock/*.js'
-  ], prog, config)
-
-  const c = merged[0]
-
-  t.is(c.in.foo, path.join(cwd, './tests/mock/foo.js'))
-})
-
-test('config overrides', t => {
-  config = {
-    in: './tests/mock/foo.js'
-  }
-
-  const merged = mergeConfig([
-    './tests/mock/*.js'
-  ], prog, config)
-
-  const c = merged[0]
-
-  t.is(c.in.foo, path.join(cwd, './tests/mock/foo.js'))
-  t.falsy(c.in.bar)
-  t.falsy(c.in.baz)
-})
-
-test('config with entry object', t => {
-  config = {
-    in: {
-      foo: './tests/mock/foo.js',
-      bar: './tests/mock/bar.js',
-    }
-  }
-
-  const merged = mergeConfig(null, prog, config)
-
-  const c = merged[0]
-
-  t.is(c.in.foo, path.join(cwd, './tests/mock/foo.js'))
-  t.is(c.in.bar, path.join(cwd, './tests/mock/bar.js'))
-})
-
-test('multi-config', t => {
-  config = [
-    {
-      in: './tests/mock/foo.js'
-    },
-    {
-      in: './tests/mock/bar.js'
-    },
-    {
-      in: {
-        baz: './tests/mock/baz.js'
-      }
-    }
-  ]
-
-  const merged = mergeConfig(null, prog, config)
-
-  t.is(merged[0].in.foo, path.join(cwd, './tests/mock/foo.js'))
-  t.is(merged[1].in.bar, path.join(cwd, './tests/mock/bar.js'))
-  t.is(merged[2].in.baz, path.join(cwd, './tests/mock/baz.js'))
+  t.pass()
 })

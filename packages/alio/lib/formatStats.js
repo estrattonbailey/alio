@@ -1,5 +1,6 @@
 const log = require('./logger.js')
 
+// TODO write tests
 module.exports = function formatStats (stats) {
   return [].concat(stats.stats || stats).map(stat => {
     const { startTime, endTime } = stat

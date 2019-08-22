@@ -1,71 +1,95 @@
 const path = require('path')
-const match = require('matched')
+const clone = require('clone')
 const exit = require('exit')
+const webpack = require('webpack')
+const match = require('matched')
+const TerserPlugin = require('terser-webpack-plugin')
 
 const log = require('./logger.js')
+const resolveEntry = require('./resolveEntry.js')
+const resolvePresets = require('./resolvePresets.js')
 
 const cwd = process.cwd()
 
-function getFiles (file) {
-  if (/\*+/g.test(file)) {
-    return match.sync(path.join(cwd, file))
-  } else {
-    return [ path.join(cwd, file) ]
-  }
-}
-
-module.exports = function mergeConfig (inputs, prog, config) {
-  let merged = []
-
-  if (config) {
-    const configs = [].concat(config)
-
-    merged = configs.map(config => {
-      const input = {}
-
-      if (typeof config.in === 'object' && !Array.isArray(config.in)) {
-        for (let name in config.in) {
-          input[name] = path.join(cwd, config.in[name])
-        }
-      } else {
-        const files = getFiles(config.in)
-
-        files.map(f => {
-          input[path.basename(f, '.js')] = f
-        })
-      }
-
-      return {
-        ...config,
-        in: input,
-      }
-    })
-  } else {
-    const input = inputs.reduce((entry, file) => {
-      const files = getFiles(file)
-
-      files.map(f => {
-        entry[path.basename(f, '.js')] = f
-      })
-
-      return entry
-    }, {})
-
-    merged = [
+const baseConfig = {
+  output: {
+    filename: '[name].js'
+  },
+  mode: 'development',
+  target: 'web',
+  performance: { hints: false },
+  devtool: 'cheap-module-source-map',
+  module: {
+    rules: [
       {
-        in: input,
-        out: prog.out || cwd,
-        reload: prog.reload || false,
-        presets: []
+        test: /\.js$/,
+        exclude: /node_modules/,
+        use: [
+          {
+            loader: require.resolve('babel-loader'),
+            options: {
+              plugins: [
+                require.resolve('@babel/plugin-syntax-object-rest-spread'),
+              ],
+            }
+          }
+        ]
       }
     ]
+  },
+  resolve: {
+    alias: {
+      '@': process.cwd()
+    }
+  },
+  plugins: []
+}
+
+module.exports = function createConfig (conf, watch) {
+  const wc = clone(baseConfig)
+
+  wc.entry = resolveEntry(conf.in)
+
+  wc.output = Object.assign(
+    wc.output,
+    // accepts a string or webpack output object
+    typeof conf.out === 'object' ? conf.out : {
+      path: path.resolve(cwd, conf.out)
+    }
+  )
+  // double check to make sure output is resolved correctly
+  wc.output.path = path.resolve(cwd, wc.output.path)
+
+  wc.resolve.alias = Object.assign(wc.resolve.alias, conf.alias || {})
+
+  wc.plugins = wc.plugins.concat([
+    new webpack.DefinePlugin(conf.env || {}),
+    conf.banner && new webpack.BannerPlugin({
+      banner: conf.banner,
+      raw: true,
+      entryOnly: true,
+      exclude: /\.(sa|sc|c)ss$/
+    })
+  ].filter(Boolean))
+
+  if (conf.presets) resolvePresets(conf.presets, { watch }, wc)
+
+  if (!watch) {
+    wc.mode = 'production'
+
+    wc.optimization = {
+      minimizer: [
+        new TerserPlugin({
+          terserOptions: {
+            mangle: false
+          }
+        })
+      ]
+    }
   }
 
-  /**
-   * assertions
-   *
-   * TODO ensure at least one entry
-   */
-
-  return merged
+  return [
+    conf,
+    wc
+  ]
 }

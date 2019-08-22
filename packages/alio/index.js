@@ -4,13 +4,14 @@ const onExit = require('exit-hook')
 const webpack = require('webpack')
 
 const log = require('./lib/logger.js')
-const createConfig = require('./lib/createConfig.js')
+const mergeConfig = require('./lib/mergeConfig.js')
 const formatStats = require('./lib/formatStats.js')
 const clientReloader = require('./lib/clientReloader.js')
 
 const cwd = process.cwd()
 
 function watch (confs) {
+  // TODO write tests for reloading
   let port = 4000
   const servers = {}
   const sockets = {}
@@ -25,7 +26,7 @@ function watch (confs) {
 
       return conf
     })
-    .map(conf => createConfig(conf, true))
+    .map(conf => mergeConfig(conf, true))
     .map(([ conf, wc ]) => {
       const hash = Object.keys(wc.entry).join(':')
 
@@ -93,14 +94,8 @@ function watch (confs) {
 
 function build (confs) {
   const configs = confs
-    .map(conf => createConfig(conf, false))
-    .map(([ conf, wc ]) => {
-      wc.mode = 'production'
-
-      process.env.DEBUG && console.log(JSON.stringify(wc, null, '  '))
-
-      return wc
-    })
+    .map(conf => mergeConfig(conf, false))
+    .map(([ conf, wc ]) => wc)
 
   return new Promise((res, rej) => {
     webpack(configs).run((e, stats) => {
