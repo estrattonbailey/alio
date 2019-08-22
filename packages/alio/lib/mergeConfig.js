@@ -54,7 +54,7 @@ module.exports = function createConfig (conf, watch) {
     wc.output,
     // accepts a string or webpack output object
     typeof conf.out === 'object' ? conf.out : {
-      path: path.resolve(cwd, conf.out)
+      path: path.resolve(cwd, conf.out || '')
     }
   )
   // double check to make sure output is resolved correctly

@@ -57,7 +57,7 @@ npx alio build src/*.js --out /dist
 ```
 
 ### Configuration
-`alio` also accepts a config. Here's an example:
+`alio` also accepts a config in place of CLI flags. Here's an example:
 ```javascript
 module.exports = {
   in: 'src/*.js',
@@ -71,6 +71,12 @@ module.exports = {
   banner: '/** Added to top of file */',
   reload: false
 }
+```
+
+By default, it looks for `alio.config.js` in the current working directory. To
+specify a different config, use the `--config` flag:
+```bash
+alio --config ./alio.production.js
 ```
 
 #### `config.in`
@@ -88,12 +94,30 @@ module.exports = {
   in: 'src/*.js'
 }
 ```
-Or an object:
+An object:
 ```javascript
 module.exports = {
   in: {
     foo: 'src/foo.js'
   }
+}
+```
+An array:
+```javascript
+module.exports = {
+  in: [
+    'src/foo.js',
+    'src/bar.js'
+  ]
+}
+```
+Or a combo, as an array:
+```javascript
+module.exports = {
+  in: [
+    'src/*.js',
+    'public/util.js'
+  ]
 }
 ```
 
@@ -131,28 +155,35 @@ Adds a string to the top of all compiled files.
 In watch mode only, inserts a tiny live-reload script that will refresh you
 browser every time a file change is made.
 
-## API
-Using `alio` in a node script adds even more flexibility.
-
-## Config
-To take advantage of multi-entries and a few other options, you'll need to
-define a config file.
-
+### Multi-config
+`alio` supports multiple configs using the config file as well:
 ```javascript
-// spitball.config.js
-module.exports = {
-  in: 'src/*.js', // string or object syntax
-  out: 'dist',
-  env: {
-    apiKey: 'abcde'
+module.exports = [
+  {
+    in: 'src/foo.js'
   },
-  alias: {
-    components: 'src/components/'
-  },
-  banner: '/** Hello there */', // default undefined
-  reload: true // live-reload, defaults to false
-}
+  {
+    in: 'src/bar.js'
+  }
+]
+```
+
+## API
+Your can also use `alio` in a node script.
+
+First, pass a config object, or array of configs, to the `alio` factory:
+```javascript
+const alio = require('alio')
+
+const bundle = alio([
+  { in: 'src/foo.js' }
+])
+```
+
+Then, call either `build` or `watch`:
+```javascript
+bundle.build()
 ```
 
 ## License
-MIT License © [The Couch](https://thecouch.nyc)
+MIT License © [Eric Bailey](https://estrattonbailey.com)
