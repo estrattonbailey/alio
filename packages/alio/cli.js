@@ -10,6 +10,8 @@ const pkg = require('./package.json')
 const alio = require('./index.js')
 const mergeConfig = require('./lib/mergeConfig.js')
 
+const { NODE_ENV } = process.env
+
 const prog = require('commander')
   .version(pkg.version)
   .option('-o, --out <output>', '')
@@ -40,6 +42,8 @@ if (!process.argv.slice(2).length) {
     exit()
   })
 } else {
-  console.clear()
+  NODE_ENV !== 'testing' && console.clear()
   prog.parse(process.argv)
 }
+
+module.exports = prog

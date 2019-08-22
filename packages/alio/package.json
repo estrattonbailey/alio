@@ -7,7 +7,7 @@
     "alio": "./cli.js"
   },
   "scripts": {
-    "test": "ava ./tests/*.test.js --verbose"
+    "test": "NODE_ENV=testing ava ./tests/*.test.js --verbose"
   },
   "repository": {
     "type": "git",
