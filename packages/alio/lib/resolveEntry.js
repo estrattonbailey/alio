@@ -4,9 +4,9 @@ const cwd = process.cwd()
 
 function matchFiles (file) {
   if (/\*+/g.test(file)) {
-    return match.sync(path.join(cwd, file))
+    return match.sync(path.resolve(cwd, file))
   } else {
-    return [ path.join(cwd, file) ]
+    return [ path.resolve(cwd, file) ]
   }
 }
 
@@ -15,7 +15,7 @@ module.exports = function resolveEntry (entry) {
 
   if (typeof entry === 'object' && !Array.isArray(entry)) {
     for (let file in entry) {
-      result[file] = path.join(cwd, entry[file])
+      result[file] = path.resolve(cwd, entry[file])
     }
   } else {
     const entries = [].concat(entry)
