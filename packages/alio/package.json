@@ -11,14 +11,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/the-couch/alio.git"
+    "url": "git+ssh://git@github.com/estrattonbailey/alio.git"
   },
   "author": "estrattonbailey",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/the-couch/alio/issues"
+    "url": "https://github.com/estrattonbailey/alio/issues"
   },
-  "homepage": "https://github.com/the-couch/alio#readme",
+  "homepage": "https://github.com/estrattonbailey/alio#readme",
   "dependencies": {
     "@babel/core": "^7.3.4",
     "@babel/plugin-proposal-object-rest-spread": "^7.3.4",
