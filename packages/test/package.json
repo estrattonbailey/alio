@@ -1,6 +1,6 @@
 {
   "name": "alio-test",
-  "version": "0.4.0",
+  "version": "1.0.0-alpha.0",
   "private": true,
   "scripts": {
     "start": "ava"
@@ -9,7 +9,7 @@
     "@alio/preset-node": "^0.4.0",
     "@alio/preset-postcss": "^0.4.0",
     "@alio/preset-sass": "^0.4.0",
-    "alio": "^0.4.0",
+    "alio": "^1.0.0-alpha.0",
     "ava": "^2.1.0"
   }
 }
