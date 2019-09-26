@@ -28,6 +28,10 @@ function watch (confs) {
     })
     .map(conf => mergeConfig(conf, true))
     .map(([ conf, wc ]) => {
+      if (conf.modify) conf.modify(wc)
+      return [ conf, wc ]
+    })
+    .map(([ conf, wc ]) => {
       const hash = Object.keys(wc.entry).join(':')
 
       if (conf.reload) {
@@ -95,7 +99,10 @@ function watch (confs) {
 function build (confs) {
   const configs = confs
     .map(conf => mergeConfig(conf, false))
-    .map(([ conf, wc ]) => wc)
+    .map(([ conf, wc ]) => {
+      if (conf.modify) conf.modify(wc)
+      return wc
+    })
 
   return new Promise((res, rej) => {
     webpack(configs).run((e, stats) => {
