@@ -18,25 +18,8 @@ const baseConfig = {
   mode: 'development',
   target: 'web',
   performance: { hints: false },
-  devtool: 'cheap-module-source-map',
-  module: {
-    rules: [
-      {
-        test: /\.js$/,
-        exclude: /node_modules/,
-        use: [
-          {
-            loader: require.resolve('babel-loader'),
-            options: {
-              plugins: [
-                require.resolve('@babel/plugin-syntax-object-rest-spread'),
-              ],
-            }
-          }
-        ]
-      }
-    ]
-  },
+  devtool: 'eval-source-map',
+  module: { rules: [] },
   resolve: {
     alias: {
       '@': process.cwd()
@@ -76,7 +59,7 @@ module.exports = function createConfig (conf, watch) {
 
   if (!watch) {
     wc.mode = 'production'
-
+    wc.devtool = 'nosources-source-map'
     wc.optimization = {
       minimizer: [
         new TerserPlugin({
