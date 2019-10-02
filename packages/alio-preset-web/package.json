@@ -1,6 +1,6 @@
 {
   "name": "@alio/preset-web",
-  "version": "1.0.2-alpha.0",
+  "version": "1.2.0",
   "description": "Web preset for alio.",
   "main": "index.js",
   "repository": {
