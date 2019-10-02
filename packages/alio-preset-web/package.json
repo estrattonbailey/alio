@@ -1,0 +1,21 @@
+{
+  "name": "@alio/preset-web",
+  "version": "1.0.2-alpha.0",
+  "description": "Web preset for alio.",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/estrattonbailey/alio.git"
+  },
+  "author": "estrattonbailey",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/estrattonbailey/alio/issues"
+  },
+  "homepage": "https://github.com/estrattonbailey/alio#readme",
+  "dependencies": {
+    "@babel/core": "^7.6.2",
+    "@babel/preset-env": "^7.6.2",
+    "babel-loader": "^8.0.6"
+  }
+}
