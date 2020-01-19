@@ -55,8 +55,6 @@ module.exports = function createConfig (conf, watch) {
     })
   ].filter(Boolean))
 
-  if (conf.presets) resolvePresets(conf.presets, { watch }, wc)
-
   if (!watch) {
     wc.mode = 'production'
     wc.devtool = 'nosources-source-map'
@@ -70,6 +68,8 @@ module.exports = function createConfig (conf, watch) {
       ]
     }
   }
+
+  if (conf.presets) resolvePresets(conf.presets, { watch }, wc)
 
   return [
     conf,
