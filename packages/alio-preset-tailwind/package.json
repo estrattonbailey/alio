@@ -1,0 +1,30 @@
+{
+  "name": "@alio/preset-tailwind",
+  "version": "0.0.1",
+  "description": "Tailwind preset for alio.",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/estrattonbailey/alio.git"
+  },
+  "author": "estrattonbailey",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/estrattonbailey/alio/issues"
+  },
+  "homepage": "https://github.com/estrattonbailey/alio#readme",
+  "dependencies": {
+    "autoprefixer": "^9.7.4",
+    "css-loader": "^2.1.0",
+    "cssnano": "^4.1.10",
+    "mini-css-extract-plugin": "^0.5.0",
+    "optimize-css-assets-webpack-plugin": "^5.0.3",
+    "postcss": "^7.0.14",
+    "postcss-cssnext": "^3.1.0",
+    "postcss-import": "^12.0.1",
+    "postcss-loader": "^3.0.0",
+    "postcss-nested": "^3.0.0",
+    "postcss-preset-env": "^6.7.0",
+    "tailwindcss": "^1.1.4"
+  }
+}
