@@ -1,6 +1,6 @@
 {
   "name": "@alio/preset-tailwind",
-  "version": "0.0.1",
+  "version": "1.3.0",
   "description": "Tailwind preset for alio.",
   "main": "index.js",
   "repository": {
