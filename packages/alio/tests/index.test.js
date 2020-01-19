@@ -55,26 +55,3 @@ test('multiple base configs', t => {
     },
   ]).build()
 })
-
-test('reload banner', t => {
-  const alio = create({
-    'webpack': configs => {
-      configs[0].plugins.map(plug => {
-        if (plug instanceof webpack.BannerPlugin) t.pass()
-      })
-
-      return {
-        run () {},
-        watch () {},
-      }
-    }
-  })
-
-  alio([
-    {
-      in: './test/mocks/foo.js',
-      out: './dist',
-      reload: true
-    }
-  ]).watch()
-})

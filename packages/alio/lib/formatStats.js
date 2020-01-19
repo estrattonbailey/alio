@@ -22,6 +22,7 @@ module.exports = function formatStats (stats) {
     })()
 
     return {
+      hash: Object.keys(json.entrypoints).join(':'),
       duration: (endTime - startTime) / 1000,
       assets: json.assets.map(({ name, size }) => {
         return {

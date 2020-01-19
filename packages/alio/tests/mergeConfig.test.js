@@ -12,7 +12,7 @@ function create (stubs = {}) {
 test('default config', t => {
   const mergeConfig = create()
 
-  const [ conf, wc ] = mergeConfig({
+  const wc = mergeConfig({
     in: './test/mock/foo.js',
     out: './dist'
   }, false)
@@ -29,7 +29,7 @@ test('default config', t => {
 test('default watch config', t => {
   const mergeConfig = create()
 
-  const [ conf, wc ] = mergeConfig({
+  const wc = mergeConfig({
     in: './test/mock/foo.js',
     out: './dist'
   }, true)

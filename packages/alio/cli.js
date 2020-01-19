@@ -1,49 +1,52 @@
 #! /usr/bin/env node
-'use strict'
+"use strict";
 
-const fs = require('fs')
-const path = require('path')
-const exit = require('exit')
+const fs = require("fs");
+const path = require("path");
+const exit = require("exit");
 
-const cwd = process.cwd()
-const pkg = require('./package.json')
-const alio = require('./index.js')
-const mergeCli = require('./lib/mergeCli.js')
+const cwd = process.cwd();
+const pkg = require("./package.json");
+const alio = require("./index.js");
+const mergeCli = require("./lib/mergeCli.js");
 
-const { NODE_ENV } = process.env
+const { NODE_ENV } = process.env;
 
-const prog = require('commander')
+const prog = require("commander")
   .version(pkg.version)
-  .option('-o, --out <output>', '')
-  .option('-c, --config <config>', '')
-  .option('-r, --reload', 'enable live-reloading after changes: --reload (default: false)')
+  .option("-o, --out <output>", "")
+  .option("-c, --config <config>", "")
+  .option(
+    "-r, --reload",
+    "enable live-reloading after changes: --reload (default: false)"
+  );
 
-prog
-  .command('watch [inputs...]')
-  .action(inputs => {
-    let config = {}
-    try { config = require(path.join(cwd, prog.config || 'alio.config.js')) } catch (e) {}
-    const compiler = alio(mergeCli(inputs, prog, config), { silent: false })
-    compiler.watch()
-  })
+prog.command("watch [inputs...]").action(inputs => {
+  let config = null;
+  try {
+    config = require(path.join(cwd, prog.config || "alio.config.js"));
+  } catch (e) {}
+  const compiler = alio(mergeCli(inputs, prog, config), { silent: false });
+  compiler.watch();
+});
 
-prog
-  .command('build [inputs...]')
-  .action(inputs => {
-    let config = {}
-    try { config = require(path.join(cwd, prog.config || 'alio.config.js')) } catch (e) {}
-    const compiler = alio(mergeCli(inputs, prog, config), { silent: false })
-    compiler.build()
-  })
+prog.command("build [inputs...]").action(inputs => {
+  let config = null;
+  try {
+    config = require(path.join(cwd, prog.config || "alio.config.js"));
+  } catch (e) {}
+  const compiler = alio(mergeCli(inputs, prog, config), { silent: false });
+  compiler.build();
+});
 
 if (!process.argv.slice(2).length) {
   prog.outputHelp(txt => {
-    console.log(txt)
-    exit()
-  })
+    console.log(txt);
+    exit();
+  });
 } else {
-  NODE_ENV !== 'testing' && console.clear()
-  prog.parse(process.argv)
+  NODE_ENV !== "testing" && console.clear();
+  prog.parse(process.argv);
 }
 
-module.exports = prog
+module.exports = prog;

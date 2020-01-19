@@ -1,63 +1,68 @@
-const path = require('path')
-const clone = require('clone')
-const exit = require('exit')
-const webpack = require('webpack')
-const match = require('matched')
-const TerserPlugin = require('terser-webpack-plugin')
+const path = require("path");
+const clone = require("clone");
+const exit = require("exit");
+const webpack = require("webpack");
+const match = require("matched");
+const TerserPlugin = require("terser-webpack-plugin");
 
-const log = require('./logger.js')
-const resolveEntry = require('./resolveEntry.js')
-const resolvePresets = require('./resolvePresets.js')
+const log = require("./logger.js");
+const resolveEntry = require("./resolveEntry.js");
+const resolvePresets = require("./resolvePresets.js");
 
-const cwd = process.cwd()
+const cwd = process.cwd();
 
 const baseConfig = {
   output: {
-    filename: '[name].js'
+    filename: "[name].js"
   },
-  mode: 'development',
-  target: 'web',
+  mode: "development",
+  target: "web",
   performance: { hints: false },
-  devtool: 'eval-source-map',
+  devtool: "eval-source-map",
   module: { rules: [] },
   resolve: {
     alias: {
-      '@': process.cwd()
+      "@": process.cwd()
     }
   },
   plugins: []
-}
+};
 
-module.exports = function createConfig (conf, watch) {
-  const wc = clone(baseConfig)
+module.exports = function createConfig(conf, watch) {
+  const wc = clone(baseConfig);
 
-  wc.entry = resolveEntry(conf.in)
+  wc.entry = resolveEntry(conf.in);
 
   wc.output = Object.assign(
     wc.output,
     // accepts a string or webpack output object
-    typeof conf.out === 'object' ? conf.out : {
-      path: path.resolve(cwd, conf.out || '')
-    }
-  )
+    typeof conf.out === "object"
+      ? conf.out
+      : {
+          path: path.resolve(cwd, conf.out || "")
+        }
+  );
   // double check to make sure output is resolved correctly
-  wc.output.path = path.resolve(cwd, wc.output.path)
+  wc.output.path = path.resolve(cwd, wc.output.path);
 
-  wc.resolve.alias = Object.assign(wc.resolve.alias, conf.alias || {})
+  wc.resolve.alias = Object.assign(wc.resolve.alias, conf.alias || {});
 
-  wc.plugins = wc.plugins.concat([
-    new webpack.DefinePlugin(conf.env || {}),
-    conf.banner && new webpack.BannerPlugin({
-      banner: conf.banner,
-      raw: true,
-      entryOnly: true,
-      exclude: /\.(sa|sc|c)ss$/
-    })
-  ].filter(Boolean))
+  wc.plugins = wc.plugins.concat(
+    [
+      new webpack.DefinePlugin(conf.env || {}),
+      conf.banner &&
+        new webpack.BannerPlugin({
+          banner: conf.banner,
+          raw: true,
+          entryOnly: true,
+          exclude: /\.(sa|sc|c)ss$/
+        })
+    ].filter(Boolean)
+  );
 
   if (!watch) {
-    wc.mode = 'production'
-    wc.devtool = 'nosources-source-map'
+    wc.mode = "production";
+    wc.devtool = "nosources-source-map";
     wc.optimization = {
       minimizer: [
         new TerserPlugin({
@@ -66,13 +71,10 @@ module.exports = function createConfig (conf, watch) {
           }
         })
       ]
-    }
+    };
   }
 
-  if (conf.presets) resolvePresets(conf.presets, { watch }, wc)
+  if (conf.presets) resolvePresets(conf.presets, { watch }, wc);
 
-  return [
-    conf,
-    wc
-  ]
-}
+  return wc;
+};
