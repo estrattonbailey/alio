@@ -7,6 +7,8 @@ const formatStats = require('./lib/formatStats.js')
 const createWatchConfigs = require('./lib/createWatchConfigs.js')
 
 async function watch (confs) {
+  const events = {};
+
   const {
     configs,
     servers,
@@ -18,6 +20,10 @@ async function watch (confs) {
       servers[hash].close()
       sockets[hash].close()
     }
+  }
+
+  function emit (event, data) {
+    (events[event] || []).map(cb => cb(data))
   }
 
   const compiler = webpack(configs).watch({}, (e, stats) => {
@@ -32,6 +38,8 @@ async function watch (confs) {
     log.hydrate(state => ({
       stats: formatted
     }))()
+
+    emit(Boolean(e) ? 'error' : 'stats', formatted);
   })
 
   onExit(() => {
@@ -42,6 +50,12 @@ async function watch (confs) {
   })
 
   return {
+    on (event, cb) {
+      events[event] = (events[event] || []).concat(cb)
+      return () => {
+        events[event].splice(events[event].indexOf(cb), 1)
+      }
+    },
     close () {
       return new Promise(r => {
         compiler.close(() => {
