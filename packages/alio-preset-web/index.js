@@ -1,19 +1,10 @@
 module.exports = (options = {}) => (config, ctx) => {
   config.module.rules.push({
-    test: /\.(?:js|jsx)$/,
+    test: /\.(?:js|jsx|ts|tsx)$/,
     exclude: /node_modules/,
     use: [
-      {
-        loader: require.resolve('babel-loader'),
-        options: {
-          presets: [
-            [require.resolve('@babel/preset-env'), options.env || {
-              targets: 'defaults'
-            }]
-          ]
-        }
-      }
-    ]
+      require.resolve('babel-loader'),
+    ],
   })
 
   return config
